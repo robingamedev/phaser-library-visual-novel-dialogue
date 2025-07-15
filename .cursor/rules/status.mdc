@@ -1,0 +1,111 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Status & Changelog
+
+## Current Version: 0.1.0 (Development)
+
+**Status:** Phase 1 - Planning & Documentation (Complete)
+
+This plugin is currently in active development. The core design and documentation are complete, with implementation beginning in Phase 2.
+
+---
+
+## Version History
+
+### v0.1.0 (Development) - Current
+**Phase 1: Planning & Documentation**
+
+#### ✅ Completed
+- **Core Design Decisions**
+  - Defined JSON structure (`settings` and `script`)
+  - Chose supported commands (`jump`, `end`, `Choice`, `show`, `hide`)
+  - Locked in runtime API surface (`start`, `jumpTo`, `pause`, `resume`)
+  - Defined config system (`fontFamily`, `boxStyle`, `typeSpeed`, `autoForward`, `styles`, `audio`, `boxAnimationSpeed`, `boxPosition`)
+  - Set plugin boundaries (no conditionals, no rollback, no i18n, no multiple dialogue boxes)
+
+- **Documentation**
+  - `overview.mdc` — plugin summary and architecture
+  - `json-format.mdc` — JSON structure, commands, formatting, audio
+  - `usage.mdc` — setup, API, full integration, multi-file support, visual hooks
+  - Advanced examples with `{style=}`, `{audio=}`, `show`, `hide`, and `Choice`
+  - Credits and license included
+  - This roadmap file (`todo.mdc`)
+  - Status tracking (`status.mdc`)
+  - Basic README.md
+
+#### 🚧 Next Up
+- **Phase 2: Core Plugin Development**
+  - Project scaffolding and TypeScript setup
+  - Core dialogue system implementation
+  - JSON parsing and command dispatch
+  - Typewriter effects and styling
+
+---
+
+## Planned Features
+
+### v0.2.0 (Target)
+**Phase 2: Core Plugin Development**
+- Basic dialogue box rendering
+- JSON script parsing
+- Typewriter text effects
+- Choice system
+- Inline formatting support
+- Audio trigger system
+
+### v0.3.0 (Target)
+**Phase 3: Testing & Developer Experience**
+- Error handling and validation
+- Debug mode
+- Comprehensive testing
+- Developer experience improvements
+
+### v0.4.0 (Target)
+**Phase 4: Demo Project**
+- Full demo implementation
+- Multiple dialogue examples
+- Visual integration examples
+- Live demo deployment
+
+### v0.5.0 (Target)
+**Phase 5: NPM Packaging & Release**
+- NPM package creation
+- TypeScript declarations
+- Build system
+- Public release
+
+---
+
+## Development Notes
+
+- **Architecture:** Scene Plugin for Phaser 3
+- **Rendering:** Custom Phaser UI elements (canvas-native)
+- **Positioning:** Fixed position with preset anchors (`bottom`, `top`, `center`)
+- **Text Overflow:** Vertical clamping (no scrolling)
+- **Style System:** Simple `{style=value}` tags with no inheritance
+- **Audio:** Inline `{audio=value}` triggers
+
+---
+
+## Breaking Changes
+
+None yet - plugin is in initial development.
+
+---
+
+## Known Issues
+
+None yet - plugin is in initial development.
+
+---
+
+## Contributing
+
+This plugin is currently in active development. The roadmap is defined in `todo.mdc` and progress is tracked in this file.
+
+---
+
+*Last updated: Phase 1 completion*
