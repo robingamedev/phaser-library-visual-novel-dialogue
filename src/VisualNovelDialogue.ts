@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { DialogueBox } from './DialogueBox';
+import { ChoiceBox } from './ChoiceBox';
 
 // Type definitions for the plugin
 export interface DialogueConfig {
@@ -19,6 +20,10 @@ export interface TextStyle {
   bold?: boolean;
   italic?: boolean;
   fontSize?: number;
+}
+
+export interface ParsedStyle extends TextStyle {
+  content: string;
 }
 
 export interface DialogueSettings {
@@ -52,6 +57,12 @@ export default class VisualNovelDialogue {
   private isActive: boolean = false;
   private isPaused: boolean = false;
   private dialogueBox?: DialogueBox;
+  private choiceBox?: ChoiceBox | undefined;
+  private typewriterTimer?: Phaser.Time.TimerEvent | undefined;
+  private currentTypewriterText: string = '';
+  private typewriterIndex: number = 0;
+  private isTypewriting: boolean = false;
+  private isShowingChoices: boolean = false;
 
   // Event callbacks
   public onLineEnd?: (line: string) => void;
@@ -260,24 +271,36 @@ export default class VisualNovelDialogue {
    * Process a choice command
    */
   private processChoice(choices: Record<string, string>): void {
-    // This will be implemented when we add UI rendering
-    if (this.config.debug) {
-      console.log('Choice presented:', choices);
-    }
+    // Hide dialogue box while choices are visible
+    this.dialogueBox?.setVisible(false);
+    // Destroy any previous choice box
+    this.choiceBox?.destroy();
     
-    // For now, just emit the choice event
-    const [choiceText, targetLabel] = Object.entries(choices)[0] || [];
-    if (typeof choiceText === 'string' && typeof targetLabel === 'string') {
-      this.onChoice?.(targetLabel, choiceText);
-      // Auto-select first choice for now
-      this.jumpTo(targetLabel);
-    } else {
-      this.endDialogue();
+    this.isShowingChoices = true;
+    
+    // Show choice box
+    this.choiceBox = new ChoiceBox(this.scene, choices, (choiceText) => {
+      // On select, jump to the label and show dialogue box again
+      const targetLabel = choices[choiceText];
+      this.choiceBox?.destroy();
+      this.dialogueBox?.setVisible(true);
+      this.isShowingChoices = false;
+      
+      if (typeof targetLabel === 'string') {
+        this.onChoice?.(targetLabel, choiceText);
+        this.jumpTo(targetLabel);
+      } else {
+        this.endDialogue();
+      }
+    });
+    // Position the choice box below the dialogue box
+    if (this.dialogueBox) {
+      this.choiceBox.setPosition(this.dialogueBox.x + 40, this.dialogueBox.y + this.dialogueBox.height + 12);
     }
   }
 
   /**
-   * Display dialogue text in the dialogue box
+   * Display dialogue text in the dialogue box with typewriter effect
    */
   private displayDialogue(text: string): void {
     if (this.config.debug) {
@@ -294,22 +317,171 @@ export default class VisualNovelDialogue {
       if (this.data?.settings.characters[characterId]) {
         const character = this.data.settings.characters[characterId];
         this.dialogueBox?.setNameplate(character.name, character.color);
-        this.dialogueBox?.setText(dialogueText);
+        this.startTypewriter(dialogueText);
       } else {
         // No character found, treat as narrator/plain text
         this.dialogueBox?.hideNameplate();
-        this.dialogueBox?.setText(text);
+        this.startTypewriter(text);
       }
     } else {
       // No character ID, treat as plain text
       this.dialogueBox?.hideNameplate();
-      this.dialogueBox?.setText(text);
+      this.startTypewriter(text);
     }
     
     this.onLineEnd?.(text);
     
     // Auto-advance if configured
     if (this.config.autoForward) {
+      this.processNextLine();
+    }
+  }
+
+  /**
+   * Start typewriter effect for text
+   */
+  private startTypewriter(text: string): void {
+    // Clear any existing typewriter
+    this.stopTypewriter();
+    
+    // Parse inline formatting
+    const parsedText = this.parseInlineFormatting(text);
+    
+    this.currentTypewriterText = parsedText.text;
+    this.typewriterIndex = 0;
+    this.isTypewriting = true;
+    
+    // Set initial empty text
+    this.dialogueBox?.setText('');
+    
+    // Calculate delay between characters (in milliseconds)
+    const delay = 1000 / (this.config.typeSpeed || 30);
+    
+    // Start typewriter timer
+    this.typewriterTimer = this.scene.time.addEvent({
+      delay: delay,
+      callback: this.onTypewriterTick,
+      callbackScope: this,
+      loop: true
+    });
+  }
+
+  /**
+   * Parse inline formatting tags
+   */
+  private parseInlineFormatting(text: string): { text: string; styles: ParsedStyle[]; audio: string[] } {
+    const styles: ParsedStyle[] = [];
+    const audio: string[] = [];
+    let cleanText = text;
+    
+    // Parse style tags: {style=value}text{/style}
+    const styleRegex = /\{style=([^}]+)\}(.*?)\{\/style\}/g;
+    cleanText = cleanText.replace(styleRegex, (match, styleName, content) => {
+      const style = this.config.styles?.[styleName];
+      if (style) {
+        styles.push({ ...style, content });
+      }
+      return content;
+    });
+    
+    // Parse audio tags: {audio=value}{/audio}
+    const audioRegex = /\{audio=([^}]+)\}\{\/audio\}/g;
+    cleanText = cleanText.replace(audioRegex, (match, audioName) => {
+      const audioFile = this.config.audio?.[audioName];
+      if (audioFile) {
+        audio.push(audioFile);
+        // Play audio immediately
+        this.playAudio(audioFile);
+      }
+      return '';
+    });
+    
+    return { text: cleanText, styles, audio };
+  }
+
+  /**
+   * Play audio file
+   */
+  private playAudio(audioFile: string): void {
+    if (this.scene.sound && this.scene.sound.get(audioFile)) {
+      this.scene.sound.play(audioFile);
+    } else if (this.config.debug) {
+      console.log(`Audio file not found: ${audioFile}`);
+    }
+  }
+
+  /**
+   * Apply text styling to dialogue box
+   */
+  private applyTextStyle(style: TextStyle): void {
+    if (!this.dialogueBox) return;
+    
+    // This is a simplified implementation
+    // In a full implementation, you'd need to handle rich text formatting
+    // For now, we'll just log the style application
+    if (this.config.debug) {
+      console.log('Applying style:', style);
+    }
+  }
+
+  /**
+   * Handle typewriter tick
+   */
+  private onTypewriterTick(): void {
+    if (!this.isTypewriting || this.typewriterIndex >= this.currentTypewriterText.length) {
+      this.stopTypewriter();
+      return;
+    }
+    
+    this.typewriterIndex++;
+    const displayText = this.currentTypewriterText.substring(0, this.typewriterIndex);
+    this.dialogueBox?.setText(displayText);
+    
+    if (this.typewriterIndex >= this.currentTypewriterText.length) {
+      this.stopTypewriter();
+    }
+  }
+
+  /**
+   * Stop typewriter effect
+   */
+  private stopTypewriter(): void {
+    if (this.typewriterTimer) {
+      this.typewriterTimer.destroy();
+      this.typewriterTimer = undefined;
+    }
+    this.isTypewriting = false;
+  }
+
+  /**
+   * Skip typewriter effect (show full text immediately)
+   */
+  public skipTypewriter(): void {
+    if (this.isTypewriting) {
+      this.stopTypewriter();
+      this.dialogueBox?.setText(this.currentTypewriterText);
+    }
+  }
+
+  /**
+   * Check if typewriter is currently active
+   */
+  public isTypewriterActive(): boolean {
+    return this.isTypewriting;
+  }
+
+  /**
+   * Check if choices are currently being displayed
+   */
+  public isChoicesActive(): boolean {
+    return this.isShowingChoices;
+  }
+
+  /**
+   * Advance to the next line in the current script (manual progression)
+   */
+  public nextLine(): void {
+    if (!this.isTypewriting && !this.isShowingChoices) {
       this.processNextLine();
     }
   }
@@ -322,8 +494,10 @@ export default class VisualNovelDialogue {
     this.currentLabel = null;
     this.currentLineIndex = 0;
 
-    // Hide dialogue box
+    // Hide dialogue and choice boxes
     this.dialogueBox?.setVisible(false);
+    this.choiceBox?.destroy();
+    this.choiceBox = undefined;
 
     if (this.config.debug) {
       console.log('Dialogue ended');
