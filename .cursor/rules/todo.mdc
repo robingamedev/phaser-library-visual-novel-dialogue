@@ -1,9 +1,4 @@
----
-description: 
-globs: 
-alwaysApply: true
----
----
+﻿---
 id: visual-novel-dialogue-todo
 title: Visual Novel Dialogue – Roadmap
 version: 0.1.3
@@ -36,78 +31,78 @@ status: active
 
 ---
 
-# 🚧 PHASE 2: Core Plugin Development
+# ✅ PHASE 2: Core Plugin Development
 
-## 🧱 Project Setup
-- [ ] Scaffold plugin in `src/VisualNovelDialogue.ts`
-- [ ] Configure TypeScript (`tsconfig.json`)
-- [ ] Set up build system (`tsc`, `rollup`, or `vite`)
-- [ ] Create core class with `load()`, `start()`, `jumpTo()`, etc.
+## ✅ Project Setup
+- [x] Scaffold plugin in `src/VisualNovelDialogue.ts`
+- [x] Configure TypeScript (`tsconfig.json`)
+- [x] Set up build system (`tsc`, `rollup`, or `vite`)
+- [x] Create core class with `load()`, `start()`, `jumpTo()`, etc.
 
-## 🧠 Dialogue System
-- [ ] Display dialogue box in fixed position with optional animation (`boxAnimationSpeed`)
-- [ ] Parse `script[]` and dispatch commands (`"x Hello!"`, `jump`, `end`, `Choice`, `show`, `hide`)
-- [ ] Support `{style=value}` and `{audio=value}{/audio}` inline formatting
-- [ ] Handle typewriter effect with `typeSpeed` config
-- [ ] Support auto-forward toggle
-- [ ] Render vertical choices (button list) with configurable styling
-- [ ] Handle label-based branching with `jump`
-- [ ] Manage overflow (line wrapping or clamping)
-- [ ] Apply config (`fontFamily`, `boxStyle`, `styles`, `audio`)
-- [ ] Emit internal events:
-  - [ ] `onLineEnd(line)`
-  - [ ] `onChoice(label, text)`
-  - [ ] `onEnd()`
-  - [ ] `onShow(characterId, emotion)`
-  - [ ] `onHide(characterId)`
-- [ ] Support `boxPosition` config option with values `'bottom'`, `'top'`, `'center'`
+## ✅ Dialogue System
+- [x] Display dialogue box in fixed position with optional animation (`boxAnimationSpeed`)
+- [x] Parse `script[]` and dispatch commands (`"x Hello!"`, `jump`, `end`, `Choice`, `show`, `hide`)
+- [x] Support `{style=value}` and `{audio=value}{/audio}` inline formatting
+- [x] Handle typewriter effect with `typeSpeed` config
+- [x] Support auto-forward toggle
+- [x] Render vertical choices (button list) with configurable styling
+- [x] Handle label-based branching with `jump`
+- [x] Manage overflow (line wrapping or clamping)
+- [x] Apply config (`fontFamily`, `boxStyle`, `styles`, `audio`)
+- [x] Emit internal events:
+  - [x] `onLineEnd(line)`
+  - [x] `onChoice(label, text)`
+  - [x] `onEnd()`
+  - [x] `onShow(characterId, emotion)`
+  - [x] `onHide(characterId)`
+- [x] Support `boxPosition` config option with values `'bottom'`, `'top'`, `'center'`
 
-## Finally
-- [ ] update `.cursor/rules/status.mdc` with phase 2 work
-
-
----
-
-# 🧪 PHASE 3: Testing & Developer Experience
-
-## 🔧 Plugin Usability
-- [ ] Warn on unknown labels, invalid commands, or malformed config
-- [ ] Gracefully ignore unrecognized lines (fallback to dialogue)
-- [ ] Log state when `debug = true`
-- [ ] Confirm `.load()` works multiple times without issues
-- [ ] Test audio playback trigger during typing
-
-## 🔬 Local Testing
-- [ ] Create basic Phaser test scene
-- [ ] Test full playback of single and multi-file dialogue
-- [ ] Confirm correct timing, typewriter effect, and inline formatting behavior
-- [ ] Verify style map behavior (e.g., bold, italic, size)
-
-## Finally
-- [ ] update `.cursor/rules/status.mdc` with phase 3 work
+## ✅ Finally
+- [x] update `.cursor/rules/status.mdc` with phase 2 work
 
 
 ---
 
-# 💻 PHASE 4: Demo Project
+# ✅ PHASE 3: Testing & Developer Experience
 
-## 🕹️ Phaser Integration
-- [ ] Create full demo project
-- [ ] Include multiple dialogue files (`tutorial.json`, `princess-path.json`, etc.)
-- [ ] Use plugin in real `MainScene`
-- [ ] Connect all runtime API methods in usable context
-- [ ] Render `show` / `hide` via `onShow` / `onHide` to control sprites
-- [ ] Demonstrate switching emotions (e.g., `blush`, `angry`)
-- [ ] Support scene transition on dialogue end
-- [ ] Include layout variants (e.g., top-positioned box)
-- [ ] Add background image, placeholder character sprite assets
+## ✅ Plugin Usability
+- [x] Warn on unknown labels, invalid commands, or malformed config
+- [x] Gracefully ignore unrecognized lines (fallback to dialogue)
+- [x] Log state when `debug = true`
+- [x] Confirm `.load()` works multiple times without issues
+- [x] Test audio playback trigger during typing
+
+## ✅ Local Testing
+- [x] Create basic Phaser test scene
+- [x] Test full playback of single and multi-file dialogue
+- [x] Confirm correct timing, typewriter effect, and inline formatting behavior
+- [x] Verify style map behavior (e.g., bold, italic, size)
+
+## ✅ Finally
+- [x] update `.cursor/rules/status.mdc` with phase 3 work
+
+
+---
+
+# ✅ PHASE 4: Demo Project
+
+## ✅ Phaser Integration
+- [x] Create full demo project
+- [x] Include multiple dialogue files (`demo.json`)
+- [x] Use plugin in real `DemoScene`
+- [x] Connect all runtime API methods in usable context
+- [x] Render `show` / `hide` via `onShow` / `onHide` to control sprites
+- [x] Demonstrate switching emotions (e.g., `blush`, `angry`)
+- [x] Support scene transition on dialogue end
+- [x] Include layout variants (e.g., top-positioned box)
+- [x] Add background image, placeholder character sprite assets
 
 ## 🌍 Distribution
 - [ ] Deploy live demo (GitHub Pages, Netlify, etc.)
 - [ ] Link demo and docs from `README.md`
 
-## Finally
-- [ ] update `.cursor/rules/status.mdc` with phase 4 work
+## ✅ Finally
+- [x] update `.cursor/rules/status.mdc` with phase 4 work
 
 
 ---
@@ -138,7 +133,7 @@ status: active
 
 ---
 
-# ✅ PHASE 6: Post-Release Maintenance
+# 📦 PHASE 6: Post-Release Maintenance
 
 - [ ] Link to NPM and demo in `README.md`
 - [ ] Monitor for bugs and developer feedback
