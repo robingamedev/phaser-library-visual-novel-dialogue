@@ -8,5 +8,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true
-  }
+  },
+  base: '/phaser-library-visual-novel-dialogue/', // <-- REPO NAME
 }); 
