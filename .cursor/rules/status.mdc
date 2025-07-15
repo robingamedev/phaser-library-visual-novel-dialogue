@@ -1,21 +1,62 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
 # Status & Changelog
 
-## Current Version: 0.1.0 (Development)
+## Current Version: 0.2.0 (Development)
 
-**Status:** Phase 1 - Planning & Documentation (Complete)
+**Status:** Phase 2 & 4 - Core Plugin Development & Demo Project (Complete)
 
-This plugin is currently in active development. The core design and documentation are complete, with implementation beginning in Phase 2.
+The plugin has completed its core development phase with a fully functional dialogue system, typewriter effects, inline formatting, choice system, and a comprehensive demo project.
 
 ---
 
 ## Version History
 
-### v0.1.0 (Development) - Current
+### v0.2.0 (Development) - Current
+**Phase 2: Core Plugin Development & Phase 4: Demo Project**
+
+#### ✅ Completed
+- **Core Plugin Implementation**
+  - Complete dialogue system with JSON parsing
+  - Typewriter text effects with configurable speed
+  - Inline formatting support (`{style=value}` and `{audio=value}`)
+  - Vertical choice system with clickable buttons
+  - Character show/hide commands with emotion support
+  - Box positioning (`bottom`, `top`, `center`)
+  - Event system (`onLineEnd`, `onChoice`, `onEnd`, `onShow`, `onHide`)
+  - Debug mode with comprehensive logging
+  - Style persistence and audio playback during typewriter
+
+- **Demo Project**
+  - Full TypeScript Phaser demo with Vite
+  - Character sprite management with emotion switching
+  - Background and audio asset integration
+  - Keyboard controls (SPACE advance/skip, ESC skip typewriter)
+  - Mouse interaction for choices
+  - JSON-based dialogue loading (`demo.json`)
+  - Restart functionality
+
+- **Developer Experience**
+  - Comprehensive error handling and validation
+  - Graceful fallbacks for unknown commands
+  - Multiple dialogue file support
+  - Configurable styling and audio systems
+  - Clean API surface with proper TypeScript types
+
+#### 🚧 Next Up
+- **Phase 5: NPM Packaging & Release**
+  - Package.json creation and metadata
+  - Build system and TypeScript declarations
+  - NPM publishing and distribution
+
+---
+
+## Previous Versions
+
+### v0.1.0 (Development) - Previous
 **Phase 1: Planning & Documentation**
 
 #### ✅ Completed
@@ -36,46 +77,21 @@ This plugin is currently in active development. The core design and documentatio
   - Status tracking (`status.mdc`)
   - Basic README.md
 
-#### 🚧 Next Up
-- **Phase 2: Core Plugin Development**
-  - Project scaffolding and TypeScript setup
-  - Core dialogue system implementation
-  - JSON parsing and command dispatch
-  - Typewriter effects and styling
-
 ---
 
 ## Planned Features
 
-### v0.2.0 (Target)
-**Phase 2: Core Plugin Development**
-- Basic dialogue box rendering
-- JSON script parsing
-- Typewriter text effects
-- Choice system
-- Inline formatting support
-- Audio trigger system
-
 ### v0.3.0 (Target)
-**Phase 3: Testing & Developer Experience**
-- Error handling and validation
-- Debug mode
-- Comprehensive testing
-- Developer experience improvements
+**Phase 5: NPM Packaging & Release**
+- NPM package creation and metadata
+- TypeScript declarations and build system
+- Public release and distribution
 
 ### v0.4.0 (Target)
-**Phase 4: Demo Project**
-- Full demo implementation
-- Multiple dialogue examples
-- Visual integration examples
+**Phase 6: Post-Release Maintenance**
 - Live demo deployment
-
-### v0.5.0 (Target)
-**Phase 5: NPM Packaging & Release**
-- NPM package creation
-- TypeScript declarations
-- Build system
-- Public release
+- Documentation updates
+- Community feedback integration
 
 ---
 
@@ -87,18 +103,19 @@ This plugin is currently in active development. The core design and documentatio
 - **Text Overflow:** Vertical clamping (no scrolling)
 - **Style System:** Simple `{style=value}` tags with no inheritance
 - **Audio:** Inline `{audio=value}` triggers
+- **Demo:** Full TypeScript demo with Vite, character sprites, and audio
 
 ---
 
 ## Breaking Changes
 
-None yet - plugin is in initial development.
+None yet - plugin is in development phase.
 
 ---
 
 ## Known Issues
 
-None yet - plugin is in initial development.
+None currently identified - all core functionality is working as expected.
 
 ---
 
@@ -108,4 +125,5 @@ This plugin is currently in active development. The roadmap is defined in `todo.
 
 ---
 
-*Last updated: Phase 1 completion*
+*Last updated: Phase 2 & 4 completion*
+
