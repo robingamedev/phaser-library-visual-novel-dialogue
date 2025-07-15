@@ -1,0 +1,83 @@
+---
+description: A minimal, JSON-driven dialogue system for Phaser 3 games with support for branching choices, typewriter effects, and simple inline formatting.
+globs: 
+alwaysApply: false
+---
+---
+id: visual-novel-dialogue-overview
+title: Visual Novel Dialogue – Overview
+version: 0.1.2
+category: phaser-plugin
+status: active
+---
+# Overview
+
+A minimal, JSON-driven dialogue plugin for Phaser 3 that supports visual novel–style text, typewriter effects, branching choices, nameplate coloring, and external logic control — all driven by a single JSON structure.
+
+
+# Features
+
+- 🧾 JSON-based dialogue scripting
+- 💬 Character nameplates with color tags
+- 🧠 Label-based branching via `jump`
+- 🎭 Player choices
+- ⏳ Typewriter text effect
+- 🎨 Simple inline styling with `{style=value}`
+- 🧰 Global config for fonts, box style, and speed
+- 🔌 Exposed API for `jumpTo`, `pause`, and hooks
+- 🔊 Inline audio triggers with `{audio=value}{/audio}` tags
+
+
+
+# Installation
+
+```bash
+npm install @robingamedev/visual-novel-dialogue
+```
+
+# Code
+
+- `.cursor/usage.mdc` for the code pattern of how to set up, the api, and methods
+- `.cursor/json-format.mdc` for the code pattern for the json file, and commands
+
+The plugin includes built-in support for parser commands like `show`, `hide`, `jump`, and `end`.  
+These commands are automatically interpreted and handled by the plugin — no extra setup is required to make them work.
+
+
+# Plugin Architecture
+
+This plugin is implemented as a **Scene Plugin**, meaning it attaches to a specific scene and renders UI directly on that scene’s display list. This ensures full control over layout, layering, and lifecycle.
+
+The dialogue box is rendered in a **fixed position**, typically near the bottom of the screen. Developers can reposition it manually or configure the layout through the plugin config.
+
+Rendering is handled using **custom Phaser UI elements**, not the DOM or third-party UI layers. This keeps it performant and canvas-native.
+
+Commands like `show` and `hide` also emit events (`onShow`, `onHide`) so you can hook into character sprite logic without tightly coupling it to the dialogue system.
+
+---
+
+# What This Plugin Does **Not** Do
+
+To keep things modular and extensible, this plugin does **not** include:
+- Conditional branching or logic evaluation
+- Save/load system or rollback
+- Sprite/image rendering
+- i18n or localization support
+- Multiple dialogue file handling (you must unload the current one first)
+- Saving/resuming active dialogue mid-sequence  
+  (Save game state **before** or **after** the interaction, not during)
+- Only one dialogue box is supported per scene — multi-character UIs are out of scope
+
+All external logic should be handled in your Phaser scene or game systems.
+
+# Credits
+
+✍️ Portions of this project were generated with assistance from AI (ChatGPT), then reviewed and refined by a human developer.
+
+# License
+
+MIT
+
+---
+
+Built for small teams, hobbyists, and story-heavy games.

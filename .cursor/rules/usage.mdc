@@ -1,0 +1,288 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+id: visual-novel-dialogue-usage
+title: Visual Novel Dialogue – Usage
+version: 0.1.5
+category: phaser-plugin
+status: active
+---
+# Usage
+
+## Basic Example
+
+```ts
+import VisualNovelDialogue from '@robingamedev/visual-novel-dialogue';
+
+const dialogue = new VisualNovelDialogue(this, {
+  fontFamily: 'VT323',
+  typeSpeed: 30,
+  boxStyle: 'default',
+  autoForward: false,
+  boxAnimationSpeed: 0,
+});
+
+dialogue.load('dialogue.json'); // Load a single JSON file
+dialogue.start('Start');        // Begin at the "Start" label
+```
+
+---
+
+## Configuration
+
+When initializing the plugin, you may pass a config object:
+
+```ts
+const dialogue = new VisualNovelDialogue(this, {
+  fontFamily: 'VT323',
+  typeSpeed: 30,
+  boxStyle: 'default',
+  autoForward: false,
+  boxAnimationSpeed: 0,
+  boxPosition: 'bottom',
+  styles: {
+    whisper: { color: '#888888', italic: true },
+    angry: { color: '#ff3333', bold: true },
+    narration: { color: '#cccccc', fontSize: 14 }
+  }, 
+  audio: {
+	hello: "sfx/hello.wav",
+	surprise: "sfx/surprise.wav"
+  }
+});
+```
+
+| Option        | Description                                         |
+| ------------- | --------------------------------------------------- |
+| `fontFamily`  | Font to use                                         |
+| `typeSpeed`   | Characters per second                               |
+| `boxStyle`    | Custom dialog box variant                           |
+| `autoForward` | Whether to auto-advance lines globally              |
+| `styles`      | Mapping of `{style=value}` to text styling |
+| `audio`       | Mapping of `{audio=value}` to play sfx |
+| `boxAnimationSpeed` | Time (ms) for box fade-in or transition (0 = instant) |
+| `boxPosition` | Preset layout anchor: 'bottom' (default), 'top', or 'center' |
+| `debug` | If true, logs parsed lines, commands, and events to console (for dev use) |
+
+---
+
+## Runtime API
+
+```ts
+dialogue.start('Start');
+dialogue.jumpTo('label-name');
+dialogue.pause();
+dialogue.resume();
+
+dialogue.onLineEnd = (line) => { ... };
+dialogue.onChoice = (label, choiceText) => { ... };
+dialogue.onEnd = () => { ... };
+dialogue.onShow = (characterId, emotion) => { ... };
+dialogue.onHide = (characterId) => { ... };
+
+```
+
+---
+
+## Full Integration Example
+
+The plugin is designed to be easy to integrate into any Phaser 3 scene.
+
+```ts
+import VisualNovelDialogue from '@robingamedev/visual-novel-dialogue';
+
+export default class MainScene extends Phaser.Scene {
+  create() {
+    const dialogue = new VisualNovelDialogue(this, {
+      fontFamily: 'VT323',
+      typeSpeed: 40,
+      boxStyle: 'wooden',
+      autoForward: false,
+	  boxAnimationSpeed: 40,
+	  boxPosition: 'bottom',
+      styles: {
+        whisper: { color: '#999', italic: true },
+        shout: { color: '#ff0', bold: true }
+      },
+	  audio: { surprise: "sfx/surprise.wav" }
+    });
+
+    dialogue.onLineEnd = (line) => {
+      console.log("Line finished:", line);
+    };
+
+    dialogue.onChoice = (label, choiceText) => {
+      console.log(`Player chose: "${choiceText}" → Jump to: ${label}`);
+    };
+
+    dialogue.onEnd = () => {
+      console.log("Dialogue sequence finished.");
+    };
+
+    // Load your dialogue JSON (from a file path)
+    dialogue.load('assets/dialogue/tutorial.json');
+
+    // Or load from Phaser's cache:
+    // dialogue.load(this.cache.json.get('tutorial'));
+
+    dialogue.start('Start');
+  }
+}
+```
+
+---
+
+## Common Workflow Tips
+
+1. You must call `dialogue.load(jsonOrPath)` before using `start()`  
+2. You can call `load()` again to unload/reset the plugin with a new JSON file  
+3. Your game logic should respond to `onLineEnd`, `onChoice`, and `onEnd` for chaining actions or changing scenes  
+4. You control visuals (e.g., character sprites) through your own hooks  
+5. If you're testing or scripting, you can log dialogue progress by setting a debug flag:
+
+```ts
+dialogue.debug = true;
+```
+
+
+---
+
+## Inline Text Styling
+
+The plugin supports simple inline formatting using `{style=value}` tags:
+
+```json
+"n {style=whisper}Don’t tell anyone...{/style}"
+```
+
+To use styles like `whisper`, `shout`, or `narration`, define them in your plugin config:
+
+```ts
+styles: {
+  whisper: { color: '#888888', italic: true },
+  shout: { color: '#ff0000', bold: true },
+  narration: { color: '#cccccc', fontSize: 14 }
+}
+```
+
+If a style is not defined, the plugin falls back to default text appearance.
+
+To trigger a sound effect during a line, use:
+
+```json
+"n {audio=surprise}{/audio} What was that?!"
+```
+
+This will look up surprise in your audio config map and play the corresponding sound.
+
+
+
+---
+
+## Dialogue Box Styling
+
+By default, text is clamped vertically to fit inside the dialogue box.  
+There is no scrolling or auto-wrapping. Developers should split long text into multiple lines.
+
+In future versions, overflow behavior may become configurable.
+
+The dialogue box UI includes:
+- A background image or color
+- Configurable padding, spacing, and width
+- Nameplate area (optional)
+- Text area with automatic wrapping and overflow handling
+- The dialogue box is placed using a preset anchor: `'bottom'` (default), `'top'`, or `'center'`. You can override this using the `boxPosition` config option.
+
+
+Overflow is automatically clamped with vertical spacing. If your text is too long for a single screen, consider breaking it into multiple lines.
+
+All styling is managed through the plugin config or by extending the renderer.
+
+## Game Integration
+
+- The plugin can **pause itself automatically** when the scene ends or transitions.
+- You can manually pause/resume using the runtime API (`pause()`, `resume()`).
+- All hooks (`onChoice`, `onLineEnd`, `onEnd`) can be used to trigger game logic or state updates.
+- Sprite or background visuals are **not handled by this plugin**, but you can hook into `show`/`hide` commands and use them to control visuals in your own scene.
+
+### Visual Hooks
+
+The plugin emits events for certain visual commands:
+
+- `onShow(characterId, emotion)` — triggered when `"show x emotion"` is parsed
+- `onHide(characterId)` — triggered when `"hide x"` is parsed
+
+Use these hooks to control character sprites, portraits, or animations from your scene.
+
+```ts
+dialogue.onShow = (id, emotion) => {
+  this.spawnCharacterSprite(id, emotion);
+};
+
+dialogue.onHide = (id) => {
+  this.removeCharacterSprite(id);
+};
+```
+
+## Advanced Example: Multiple JSON Files
+
+You can use multiple dialogue files to organize larger branching stories.
+
+In your **main dialogue file**:
+
+```json
+{
+  "settings": {
+    "characters": {
+      "n": { "name": "Narrator", "color": "#cccccc" }
+    }
+  },
+  "script": {
+    "Start": [
+      "n You stand before a terrible choice...",
+      {
+        "Choice": {
+          "Save the Princess": "load-princess-path",
+          "Kill the Demon King": "load-demon-path"
+        }
+      }
+    ],
+    "load-princess-path": [
+      "n You’ve chosen to rescue her.",
+      "jump End"
+    ],
+    "load-demon-path": [
+      "n The blade thirsts for vengeance.",
+      "jump End"
+    ],
+    "End": [
+      "n The decision is made.",
+      "end"
+    ]
+  }
+}
+
+
+In your game code, switch to a new dialogue file based on player choice:
+
+```ts
+dialogue.onChoice = (label, text) => {
+  if (label === 'load-princess-path') {
+    dialogue.load('dialogue/princess-path.json');
+    dialogue.start('Start');
+  } else if (label === 'load-demon-path') {
+    dialogue.load('dialogue/demon-path.json');
+    dialogue.start('Start');
+  }
+};
+```
+
+### Tips:
+- Each JSON file must contain a "Start" label and an "End" label with the "end" command.
+- Always call `.load()` before `.start()`
+- For preloaded assets, use: `dialogue.load(this.cache.json.get('princess-path'))`
+
+

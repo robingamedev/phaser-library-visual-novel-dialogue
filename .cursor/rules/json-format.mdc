@@ -1,0 +1,179 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+id: visual-novel-dialogue-json-format
+title: Visual Novel Dialogue – JSON Format
+version: 0.2.1
+category: phaser-plugin
+status: active
+---
+
+# JSON Format
+
+## Structure
+
+The dialogue file must contain two top-level keys:  
+- `settings`: character definitions  
+- `script`: labeled scenes and branching flow
+
+```json
+{
+  "settings": {
+    "characters": {
+      "n": { "name": "Innkeeper", "color": "#ffcc99" },
+      "y": { "name": "Yui", "color": "#00bfff" }
+    }
+  },
+  "script": {
+    "Start": [
+      "n Welcome to the inn, traveler.",
+      {
+        "Choice": {
+          "Ask about the town": "ask-town",
+          "Leave": "leave"
+        }
+      }
+    ],
+    "ask-town": [
+      "n It’s quiet this time of year.",
+      "jump End"
+    ],
+    "leave": [
+      "n Very well. Safe travels.",
+      "jump End"
+    ],
+    "End": [
+      "n Until next time.",
+      "end"
+    ]
+  }
+}
+```
+
+---
+
+## Supported Commands
+
+| Command                             | Description                                                                 |
+|-------------------------------------|-----------------------------------------------------------------------------|
+| `"x Hello!"`                        | Shows dialogue from character ID `x`, using their `name` and `color` from `settings.characters` |
+| `{ "Choice": { "Text": "label" } }` | Displays a list of choices. Keys are shown to the player, values are label targets |
+| `"jump label"`                      | Jumps to another label in the script                                       |
+| `"end"`                             | Ends the dialogue sequence                                                 |
+| `"show x emotion"`                  | Shows a character with a given emotion (triggers `onShow`)        |
+| `"hide x"`                          | Hides a character (triggers `onHide`) |
+
+Unrecognized lines are treated as raw dialogue.
+
+---
+
+## Formatting Tags
+
+Use inline tags for simple text styling:
+
+```
+{style=whisper}This is a secret...{/style}
+```
+
+You can define style classes in your config to match `style=value` tags.
+
+
+### Formatting Notes
+
+- Inline `{style=value}` tags are applied immediately during typewriter rendering.
+- The plugin does not currently support **rich nested formatting** (e.g., combining `{bold}{style=angry}`), but styles can include bold/italic via the style map.
+- All formatting is shallow — no pause or animation on style change is applied by default.
+- Multiple formatting tags can appear in one line, but they cannot overlap or nest.
+- After a `{style=value}` block ends with `{/style}`, text reverts to the plugin's default style.
+- There is no style stacking or inheritance.
+
+### Audio Tags
+
+You can trigger a sound effect during a line using `{audio=name}` inline tags.
+
+Example: `"n Welcome to the town. {audio=welcome}{/audio}"`
+
+Audio mappings are configured globally:
+
+```ts
+audio: {
+  welcome: 'sfx/voice-welcome.wav',
+  grunt: 'sfx/grunt.wav',
+  surprise: 'sfx/surprise.wav'
+}
+```
+
+Audio is triggered immediately when {audio=value} is parsed — it does not block or delay text progression.
+
+
+## Choice Behavior
+
+Choices are displayed as a **vertical list of buttons**. You can configure button styling (e.g., hover states, spacing) through the global config or by overriding the renderer.
+
+Conditional choices are not supported in JSON, but **external logic can jump or skip labels**, allowing you to simulate conditional flow.
+
+These visual commands ( `"show x emotion"` & `"hide x"`) don’t render images directly — instead, they trigger event callbacks you can implement in your scene logic.
+
+---
+
+## Advanced Example
+
+```json
+{
+  "settings": {
+    "characters": {
+      "n": { "name": "Narrator", "color": "#cccccc" },
+      "y": { "name": "Yui", "color": "#00bfff" }
+    }
+  },
+  "script": {
+    "Start": [
+      "show y blush",
+      "y {style=blush}{audio=nervous}{/audio}I’ve been meaning to tell you something...{/style}",
+      {
+        "Choice": {
+          "Confess your feelings": "confess-back",
+          "Change the subject": "awkward-exit"
+        }
+      }
+    ],
+    "confess-back": [
+      "n I... I feel the same way.",
+      "hide y",
+      "jump End"
+    ],
+    "awkward-exit": [
+      "n Oh... never mind then.",
+      "hide y",
+      "jump End"
+    ],
+    "End": [
+      "n Until next time.",
+      "end"
+    ]
+  }
+}
+
+
+```
+
+This example demonstrates:
+- Inline text styling
+- Character emotion
+- Multiple branching outcomes
+
+---
+
+
+## Tips
+
+- Every script must begin at `"Start"` and should include an `"End"` label that ends the conversation using `"end"`.
+- Character IDs can be 1-letter or more (`"y"`, `"hero"`, etc.).
+- You can structure your dialogue into multiple scenes using labels and `jump`.
+- Use external logic in Phaser if you need conditional branching or game state awareness.
+- If a line is not recognized as a command, it is treated as plain dialogue. Invalid commands are safely ignored.
+- Additional commands may be added in future versions. Unrecognized lines are treated as plain dialogue.
+

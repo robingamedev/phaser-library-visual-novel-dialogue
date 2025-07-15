@@ -1,0 +1,129 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+id: visual-novel-dialogue-todo
+title: Visual Novel Dialogue – Roadmap
+version: 0.1.2
+category: roadmap
+status: active
+---
+
+# 📌 PHASE 1: Planning & Documentation
+
+## ✅ Core Design Decisions
+- [x] Define JSON structure (`settings` and `script`)
+- [x] Choose supported commands (`jump`, `end`, `Choice`, `show`, `hide`)
+- [x] Lock in runtime API surface (`start`, `jumpTo`, `pause`, `resume`)
+- [x] Define config system (`fontFamily`, `boxStyle`, `typeSpeed`, `autoForward`, `styles`, `audio`, `boxAnimationSpeed`)
+- [x] Set plugin boundaries (no conditionals, no rollback, no i18n, no multiple dialogue boxes)
+
+## ✅ Docs: Plugin Design
+- [x] `overview.mdc` — plugin summary and architecture
+- [x] `json-format.mdc` — JSON structure, commands, formatting, audio
+- [x] `usage.mdc` — setup, API, full integration, multi-file support, visual hooks
+- [x] Advanced example includes `{style=}`, `{audio=}`, `show`, `hide`, and `Choice`
+- [x] Credits and license included
+- [x] This roadmap file (`todo.mdc`)
+- [ ] `status.mdc` — version logs, changelog
+- [ ] `README.md` — summary, install instructions, and link to docs
+
+---
+
+# 🚧 PHASE 2: Core Plugin Development
+
+## 🧱 Project Setup
+- [ ] Scaffold plugin in `src/VisualNovelDialogue.ts`
+- [ ] Configure TypeScript (`tsconfig.json`)
+- [ ] Set up build system (`tsc`, `rollup`, or `vite`)
+- [ ] Create core class with `load()`, `start()`, `jumpTo()`, etc.
+
+## 🧠 Dialogue System
+- [ ] Display dialogue box in fixed position with optional animation (`boxAnimationSpeed`)
+- [ ] Parse `script[]` and dispatch commands (`"x Hello!"`, `jump`, `end`, `Choice`, `show`, `hide`)
+- [ ] Support `{style=value}` and `{audio=value}{/audio}` inline formatting
+- [ ] Handle typewriter effect with `typeSpeed` config
+- [ ] Support auto-forward toggle
+- [ ] Render vertical choices (button list) with configurable styling
+- [ ] Handle label-based branching with `jump`
+- [ ] Manage overflow (line wrapping or clamping)
+- [ ] Apply config (`fontFamily`, `boxStyle`, `styles`, `audio`)
+- [ ] Emit internal events:
+  - [ ] `onLineEnd(line)`
+  - [ ] `onChoice(label, text)`
+  - [ ] `onEnd()`
+  - [ ] `onShow(characterId, emotion)`
+  - [ ] `onHide(characterId)`
+- [ ] Support `boxPosition` config option with values `'bottom'`, `'top'`, `'center'`
+
+---
+
+# 🧪 PHASE 3: Testing & Developer Experience
+
+## 🔧 Plugin Usability
+- [ ] Warn on unknown labels, invalid commands, or malformed config
+- [ ] Gracefully ignore unrecognized lines (fallback to dialogue)
+- [ ] Log state when `debug = true`
+- [ ] Confirm `.load()` works multiple times without issues
+- [ ] Test audio playback trigger during typing
+
+## 🔬 Local Testing
+- [ ] Create basic Phaser test scene
+- [ ] Test full playback of single and multi-file dialogue
+- [ ] Confirm correct timing, typewriter effect, and inline formatting behavior
+- [ ] Verify style map behavior (e.g., bold, italic, size)
+
+---
+
+# 💻 PHASE 4: Demo Project
+
+## 🕹️ Phaser Integration
+- [ ] Create full demo project
+- [ ] Include multiple dialogue files (`tutorial.json`, `princess-path.json`, etc.)
+- [ ] Use plugin in real `MainScene`
+- [ ] Connect all runtime API methods in usable context
+- [ ] Render `show` / `hide` via `onShow` / `onHide` to control sprites
+- [ ] Demonstrate switching emotions (e.g., `blush`, `angry`)
+- [ ] Support scene transition on dialogue end
+- [ ] Include layout variants (e.g., top-positioned box)
+- [ ] Add background image, placeholder character sprite assets
+
+## 🌍 Distribution
+- [ ] Deploy live demo (GitHub Pages, Netlify, etc.)
+- [ ] Link demo and docs from `README.md`
+
+---
+
+# 📦 PHASE 5: NPM Packaging & Release
+
+## 🧰 NPM Metadata
+- [ ] Create `package.json` with:
+  - name, version, description
+  - license, keywords
+  - `"type": "module"`
+  - `main`, `types`, `"exports"` fields
+  - `"files"` array to include only `dist/`, `README.md`
+  - `repository`, `author`, `bugs`, `homepage`
+
+## 📦 Build & Types
+- [ ] Build output (`tsc` or bundler)
+- [ ] Emit `.d.ts` type declarations
+- [ ] Test via `npm link` or local install
+- [ ] Confirm tree-shaking and import friendliness
+
+## 🚀 Publish
+- [ ] Run `npm login`
+- [ ] Publish: `npm publish --access public`
+- [ ] Tag version: `npm version patch | minor | major`
+- [ ] Push release notes and tag to GitHub
+
+---
+
+# ✅ PHASE 6: Post-Release Maintenance
+
+- [ ] Link to NPM and demo in `README.md`
+- [ ] Monitor for bugs and developer feedback
+- [ ] Keep `status.mdc` up to date for future versions
+- [ ] Revisit roadmap if extending beyond MVP
