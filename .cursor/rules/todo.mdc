@@ -38,29 +38,29 @@ status: active
 
 # 🚧 PHASE 2: Core Plugin Development
 
-## 🧱 Project Setup
-- [ ] Scaffold plugin in `src/VisualNovelDialogue.ts`
-- [ ] Configure TypeScript (`tsconfig.json`)
-- [ ] Set up build system (`tsc`, `rollup`, or `vite`)
-- [ ] Create core class with `load()`, `start()`, `jumpTo()`, etc.
+## ✅ Project Setup
+- [x] Scaffold plugin in `src/VisualNovelDialogue.ts`
+- [x] Configure TypeScript (`tsconfig.json`)
+- [x] Set up build system (`tsc`, `rollup`, or `vite`)
+- [x] Create core class with `load()`, `start()`, `jumpTo()`, etc.
 
 ## 🧠 Dialogue System
-- [ ] Display dialogue box in fixed position with optional animation (`boxAnimationSpeed`)
-- [ ] Parse `script[]` and dispatch commands (`"x Hello!"`, `jump`, `end`, `Choice`, `show`, `hide`)
+- [x] Display dialogue box in fixed position with optional animation (`boxAnimationSpeed`)
+- [x] Parse `script[]` and dispatch commands (`"x Hello!"`, `jump`, `end`, `Choice`, `show`, `hide`)
 - [ ] Support `{style=value}` and `{audio=value}{/audio}` inline formatting
 - [ ] Handle typewriter effect with `typeSpeed` config
-- [ ] Support auto-forward toggle
+- [x] Support auto-forward toggle
 - [ ] Render vertical choices (button list) with configurable styling
-- [ ] Handle label-based branching with `jump`
-- [ ] Manage overflow (line wrapping or clamping)
-- [ ] Apply config (`fontFamily`, `boxStyle`, `styles`, `audio`)
-- [ ] Emit internal events:
-  - [ ] `onLineEnd(line)`
-  - [ ] `onChoice(label, text)`
-  - [ ] `onEnd()`
-  - [ ] `onShow(characterId, emotion)`
-  - [ ] `onHide(characterId)`
-- [ ] Support `boxPosition` config option with values `'bottom'`, `'top'`, `'center'`
+- [x] Handle label-based branching with `jump`
+- [x] Manage overflow (line wrapping or clamping)
+- [x] Apply config (`fontFamily`, `boxStyle`, `styles`, `audio`)
+- [x] Emit internal events:
+  - [x] `onLineEnd(line)`
+  - [x] `onChoice(label, text)`
+  - [x] `onEnd()`
+  - [x] `onShow(characterId, emotion)`
+  - [x] `onHide(characterId)`
+- [x] Support `boxPosition` config option with values `'bottom'`, `'top'`, `'center'`
 
 ## Finally
 - [ ] update `.cursor/rules/status.mdc` with phase 2 work

@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { DialogueBox } from './DialogueBox';
 
 // Type definitions for the plugin
 export interface DialogueConfig {
@@ -50,6 +51,7 @@ export default class VisualNovelDialogue {
   private currentLineIndex: number = 0;
   private isActive: boolean = false;
   private isPaused: boolean = false;
+  private dialogueBox?: DialogueBox;
 
   // Event callbacks
   public onLineEnd?: (line: string) => void;
@@ -72,6 +74,9 @@ export default class VisualNovelDialogue {
       debug: false,
       ...config
     };
+
+    // Create dialogue box
+    this.dialogueBox = new DialogueBox(scene, this.config);
 
     if (this.config.debug) {
       console.log('VisualNovelDialogue initialized with config:', this.config);
@@ -272,14 +277,35 @@ export default class VisualNovelDialogue {
   }
 
   /**
-   * Display dialogue text (placeholder)
+   * Display dialogue text in the dialogue box
    */
   private displayDialogue(text: string): void {
     if (this.config.debug) {
       console.log('Displaying dialogue:', text);
     }
     
-    // This will be implemented when we add UI rendering
+    // Parse character dialogue (format: "characterId dialogue text")
+    const spaceIndex = text.indexOf(' ');
+    if (spaceIndex > 0) {
+      const characterId = text.substring(0, spaceIndex);
+      const dialogueText = text.substring(spaceIndex + 1);
+      
+      // Get character info from settings
+      if (this.data?.settings.characters[characterId]) {
+        const character = this.data.settings.characters[characterId];
+        this.dialogueBox?.setNameplate(character.name, character.color);
+        this.dialogueBox?.setText(dialogueText);
+      } else {
+        // No character found, treat as narrator/plain text
+        this.dialogueBox?.hideNameplate();
+        this.dialogueBox?.setText(text);
+      }
+    } else {
+      // No character ID, treat as plain text
+      this.dialogueBox?.hideNameplate();
+      this.dialogueBox?.setText(text);
+    }
+    
     this.onLineEnd?.(text);
     
     // Auto-advance if configured
@@ -296,10 +322,27 @@ export default class VisualNovelDialogue {
     this.currentLabel = null;
     this.currentLineIndex = 0;
 
+    // Hide dialogue box
+    this.dialogueBox?.setVisible(false);
+
     if (this.config.debug) {
       console.log('Dialogue ended');
     }
 
     this.onEnd?.();
+  }
+
+  /**
+   * Show the dialogue box
+   */
+  public show(): void {
+    this.dialogueBox?.setVisible(true);
+  }
+
+  /**
+   * Hide the dialogue box
+   */
+  public hide(): void {
+    this.dialogueBox?.setVisible(false);
   }
 } 
