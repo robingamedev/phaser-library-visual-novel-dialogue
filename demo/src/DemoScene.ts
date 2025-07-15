@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import VisualNovelDialogue from '@robingamedev/visual-novel-dialogue';
+import demoData from './demo.json';
 
 export class DemoScene extends Phaser.Scene {
     private dialogue!: VisualNovelDialogue;
@@ -76,7 +77,8 @@ export class DemoScene extends Phaser.Scene {
         };
 
         // Load and start the demo dialogue
-        this.loadDemoDialogue();
+        this.dialogue.load(demoData);
+        this.dialogue.start('Start');
         
         // Set up input handlers
         this.setupInput();
@@ -152,66 +154,6 @@ export class DemoScene extends Phaser.Scene {
         this.input.keyboard?.on('keydown-ESC', () => {
             this.dialogue.skipTypewriter();
         });
-    }
-
-    private loadDemoDialogue() {
-        const demoData = {
-            settings: {
-                characters: {
-                    n: { name: "Narrator", color: "#cccccc" },
-                    y: { name: "Yui", color: "#00bfff" }
-                }
-            },
-            script: {
-                Start: [
-                    "n Welcome to the Visual Novel Dialogue Demo!",
-                    "n This demonstrates all the plugin features.",
-                    "show y normal",
-                    "y Hello! I'm Yui. Nice to meet you!",
-                    "show y blush",
-                    "y {style=whisper}I'm a bit nervous...{/style}",
-                    "y {audio=hello}{/audio} Let me show you some emotions!",
-                    "show y angry",
-                    "y {style=angry}Just kidding! I'm not really angry.{/style}",
-                    "show y normal",
-                    "jump questions"
-                ],
-				questions: [
-                    "y {audio=surprise}{/audio} Lets ask questions!",
-					{
-						Choice: {
-							"Ask about the weather": "weather",
-							"Ask about feelings": "feelings",
-							"End conversation": "end-conversation"
-						}
-					}
-				],
-                weather: [
-                    "n You asked about the weather.",
-                    "y It's a beautiful day for coding!",
-                    "jump questions"
-                ],
-                feelings: [
-                    "n You asked about feelings.",
-                    "y {style=shout}I LOVE THIS PLUGIN!{/style}",
-                    "y {audio=surprise}{/audio} It's so much fun to use!",
-                    "jump questions"
-                ],
-                "end-conversation": [
-                    "n You chose to end the conversation.",
-                    "y Goodbye! Thanks for testing!",
-                    "hide y",
-                    "jump End"
-                ],
-                End: [
-                    "n Demo completed!",
-                    "end"
-                ]
-            }
-        };
-
-        this.dialogue.load(demoData);
-        this.dialogue.start('Start');
     }
 
     private showRestartMessage() {
