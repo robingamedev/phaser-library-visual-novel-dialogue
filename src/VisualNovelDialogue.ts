@@ -63,6 +63,7 @@ export default class VisualNovelDialogue {
   private typewriterIndex: number = 0;
   private isTypewriting: boolean = false;
   private isShowingChoices: boolean = false;
+  private currentStyle?: ParsedStyle | undefined;
 
   // Event callbacks
   public onLineEnd?: (line: string) => void;
@@ -307,6 +308,9 @@ export default class VisualNovelDialogue {
       console.log('Displaying dialogue:', text);
     }
     
+    // Reset text style at the beginning of each new line
+    this.dialogueBox?.resetTextStyle();
+    
     // Parse character dialogue (format: "characterId dialogue text")
     const spaceIndex = text.indexOf(' ');
     if (spaceIndex > 0) {
@@ -351,7 +355,10 @@ export default class VisualNovelDialogue {
     this.typewriterIndex = 0;
     this.isTypewriting = true;
     
-    // Set initial empty text
+    // Store the style for use during typewriter
+    this.currentStyle = parsedText.styles.length > 0 ? parsedText.styles[0] : undefined;
+    
+    // Set initial empty text (style already reset in displayDialogue)
     this.dialogueBox?.setText('');
     
     // Calculate delay between characters (in milliseconds)
@@ -402,11 +409,16 @@ export default class VisualNovelDialogue {
   /**
    * Play audio file
    */
-  private playAudio(audioFile: string): void {
-    if (this.scene.sound && this.scene.sound.get(audioFile)) {
-      this.scene.sound.play(audioFile);
-    } else if (this.config.debug) {
-      console.log(`Audio file not found: ${audioFile}`);
+  private playAudio(audioKey: string): void {
+    try {
+      this.scene.sound.play(audioKey);
+      if (this.config.debug) {
+        console.log(`Playing audio: ${audioKey}`);
+      }
+    } catch (error) {
+      if (this.config.debug) {
+        console.log(`Audio not found: ${audioKey}`);
+      }
     }
   }
 
@@ -435,7 +447,15 @@ export default class VisualNovelDialogue {
     
     this.typewriterIndex++;
     const displayText = this.currentTypewriterText.substring(0, this.typewriterIndex);
-    this.dialogueBox?.setText(displayText);
+    
+    // Always use setTextWithStyle to preserve the current style during typewriter
+    if (this.currentStyle) {
+      this.dialogueBox?.setTextWithStyle(displayText, this.currentStyle);
+    } else {
+      // For lines without style, we need to reset to default first
+      this.dialogueBox?.resetTextStyle();
+      this.dialogueBox?.setText(displayText);
+    }
     
     if (this.typewriterIndex >= this.currentTypewriterText.length) {
       this.stopTypewriter();
@@ -459,7 +479,13 @@ export default class VisualNovelDialogue {
   public skipTypewriter(): void {
     if (this.isTypewriting) {
       this.stopTypewriter();
-      this.dialogueBox?.setText(this.currentTypewriterText);
+      
+      // Preserve the current style when skipping
+      if (this.currentStyle) {
+        this.dialogueBox?.setTextWithStyle(this.currentTypewriterText, this.currentStyle);
+      } else {
+        this.dialogueBox?.setText(this.currentTypewriterText);
+      }
     }
   }
 

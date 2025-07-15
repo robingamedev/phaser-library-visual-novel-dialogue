@@ -54,26 +54,39 @@ export class DialogueBox extends GameObjects.Container {
   }
 
   setText(text: string) {
-    // Simple style application - for now just log the styles
-    // In a full implementation, you'd parse and apply rich text formatting
+    // Reset to default style before setting new text
+    this.resetTextStyle();
     this.text.setText(text);
   }
 
   setTextWithStyle(text: string, style?: TextStyle) {
     if (style) {
-      const textStyle: any = {
-        fontFamily: this.config.fontFamily || 'Arial',
-        fontSize: '24px',
-        color: style.color || '#fff'
-      };
+      // Apply individual style properties
+      if (style.color) {
+        this.text.setColor(style.color);
+      }
+      if (style.bold) {
+        this.text.setFontStyle('bold');
+      }
+      if (style.italic) {
+        this.text.setFontStyle('italic');
+      }
+      if (style.fontSize) {
+        this.text.setFontSize(`${style.fontSize}px`);
+      }
       
-      if (style.bold) textStyle.fontWeight = 'bold';
-      if (style.italic) textStyle.fontStyle = 'italic';
-      if (style.fontSize) textStyle.fontSize = `${style.fontSize}px`;
-      
-      this.text.setStyle(textStyle);
+      // Debug logging
+      console.log('Applying style:', style, 'to text:', text);
     }
     this.text.setText(text);
+  }
+
+  resetTextStyle() {
+    // Reset to default using individual setters
+    this.text.setColor('#fff');
+    this.text.setFontStyle('normal');
+    this.text.setFontSize('24px');
+    console.log('Reset text style to default');
   }
 
   setNameplate(name: string, color: string) {
