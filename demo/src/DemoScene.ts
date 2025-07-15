@@ -3,18 +3,32 @@ import VisualNovelDialogue from '@robingamedev/visual-novel-dialogue';
 
 export class DemoScene extends Phaser.Scene {
     private dialogue!: VisualNovelDialogue;
-    private background!: Phaser.GameObjects.Rectangle;
-    private characterSprites: Map<string, Phaser.GameObjects.Rectangle> = new Map();
+    private background!: Phaser.GameObjects.Image;
+    private characterSprites: Map<string, Phaser.GameObjects.Image> = new Map();
 
     constructor() {
         super({ key: 'DemoScene' });
     }
 
-    create() {
-        // Create a simple background
-        this.background = this.add.rectangle(400, 300, 800, 600, 0x34495e);
+    preload() {
+        // Load background
+        this.load.image('background', 'background.png');
         
-        // Create placeholder character sprites
+        // Load character sprites
+        this.load.image('yui-normal', 'yui-normal.png');
+        this.load.image('yui-blush', 'yui-blush.png');
+        this.load.image('yui-angry', 'yui-angry.png');
+        
+        // Load audio files
+        this.load.audio('hello', 'hello.mp3');
+        this.load.audio('surprise', 'surprise.wav');
+    }
+
+    create() {
+        // Create background
+        this.background = this.add.image(400, 300, 'background');
+        
+        // Create character sprites
         this.createCharacterSprites();
         
         // Initialize the dialogue plugin
@@ -32,8 +46,8 @@ export class DemoScene extends Phaser.Scene {
                 shout: { color: '#ffff00', bold: true }
             },
             audio: {
-                surprise: 'surprise.wav',
-                hello: 'hello.wav'
+                surprise: 'surprise',
+                hello: 'hello'
             }
         });
 
@@ -69,34 +83,57 @@ export class DemoScene extends Phaser.Scene {
     }
 
     private createCharacterSprites() {
-        // Create placeholder rectangles for characters
-        const yui = this.add.rectangle(200, 200, 100, 150, 0x3498db);
-        yui.setVisible(false);
-        this.characterSprites.set('y', yui);
 
-        const narrator = this.add.rectangle(600, 200, 100, 150, 0x95a5a6);
-        narrator.setVisible(false);
-        this.characterSprites.set('n', narrator);
+        const imageX = 100; 
+        const imageY = 330;
+
+        // Create character sprites using the loaded images
+        const yuiNormal = this.add.image(imageX, imageY, 'yui-normal');
+        yuiNormal.setVisible(false);
+        yuiNormal.setScale(0.5);
+        this.characterSprites.set('y', yuiNormal);
+
+        // We'll switch between different emotion sprites
+        const yuiBlush = this.add.image(imageX, imageY, 'yui-blush');
+        yuiBlush.setVisible(false);
+        yuiBlush.setScale(0.5);
+        this.characterSprites.set('y-blush', yuiBlush);
+
+        const yuiAngry = this.add.image(imageX, imageY, 'yui-angry');
+        yuiAngry.setVisible(false);
+        yuiAngry.setScale(0.5);
+        this.characterSprites.set('y-angry', yuiAngry);
     }
 
     private showCharacter(characterId: string, emotion: string) {
-        const sprite = this.characterSprites.get(characterId);
+        // Hide all character sprites first
+        this.characterSprites.forEach(sprite => sprite.setVisible(false));
+        
+        // Show the appropriate sprite based on character and emotion
+        let spriteKey = characterId;
+        if (characterId === 'y' && emotion) {
+            spriteKey = `${characterId}-${emotion}`;
+        }
+        
+        const sprite = this.characterSprites.get(spriteKey);
         if (sprite) {
             sprite.setVisible(true);
-            // Change color based on emotion
-            if (emotion === 'blush') {
-                sprite.setFillStyle(0xe74c3c);
-            } else if (emotion === 'angry') {
-                sprite.setFillStyle(0xc0392b);
+        } else {
+            // Fallback to normal sprite if emotion sprite doesn't exist
+            const fallbackSprite = this.characterSprites.get(characterId);
+            if (fallbackSprite) {
+                fallbackSprite.setVisible(true);
             }
         }
     }
 
     private hideCharacter(characterId: string) {
-        const sprite = this.characterSprites.get(characterId);
-        if (sprite) {
-            sprite.setVisible(false);
-        }
+        // Hide all sprites for this character
+        this.characterSprites.forEach((sprite, key) => {
+            if (key.startsWith(characterId)) {
+                sprite.setVisible(false);
+            }
+        });
     }
 
     private setupInput() {
@@ -131,14 +168,16 @@ export class DemoScene extends Phaser.Scene {
                     "n This demonstrates all the plugin features.",
                     "show y normal",
                     "y Hello! I'm Yui. Nice to meet you!",
+                    "show y blush",
                     "y {style=whisper}I'm a bit nervous...{/style}",
                     "y {audio=hello}{/audio} Let me show you some emotions!",
-                    "show y blush",
+                    "show y angry",
                     "y {style=angry}Just kidding! I'm not really angry.{/style}",
-					"jump questions"
+                    "show y normal",
+                    "jump questions"
                 ],
 				questions: [
-                    "Lets ask questions!",
+                    "y {audio=surprise}{/audio} Lets ask questions!",
 					{
 						Choice: {
 							"Ask about the weather": "weather",

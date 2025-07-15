@@ -1,5 +1,5 @@
 import { Scene, GameObjects } from 'phaser';
-import { DialogueConfig } from './VisualNovelDialogue';
+import { DialogueConfig, TextStyle } from './VisualNovelDialogue';
 
 export class DialogueBox extends GameObjects.Container {
   private background: GameObjects.Rectangle;
@@ -54,6 +54,25 @@ export class DialogueBox extends GameObjects.Container {
   }
 
   setText(text: string) {
+    // Simple style application - for now just log the styles
+    // In a full implementation, you'd parse and apply rich text formatting
+    this.text.setText(text);
+  }
+
+  setTextWithStyle(text: string, style?: TextStyle) {
+    if (style) {
+      const textStyle: any = {
+        fontFamily: this.config.fontFamily || 'Arial',
+        fontSize: '24px',
+        color: style.color || '#fff'
+      };
+      
+      if (style.bold) textStyle.fontWeight = 'bold';
+      if (style.italic) textStyle.fontStyle = 'italic';
+      if (style.fontSize) textStyle.fontSize = `${style.fontSize}px`;
+      
+      this.text.setStyle(textStyle);
+    }
     this.text.setText(text);
   }
 

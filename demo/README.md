@@ -55,3 +55,10 @@ If you see import errors, make sure:
 1. The main plugin is built (`npm run build` in the root)
 2. Dependencies are installed (`npm install` in demo folder)
 3. The local file reference in `package.json` is correct 
+
+
+## Resources
+hello.mp3 by 121053699 - https://freesound.org/people/121053699/sounds/468001/
+
+surprise.wav by juancamiloorjuela
+https://freesound.org/people/juancamiloorjuela/sounds/204648/
