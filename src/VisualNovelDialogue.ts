@@ -2,6 +2,15 @@ import { Scene } from 'phaser';
 import { DialogueBox } from './DialogueBox';
 import { ChoiceBox } from './ChoiceBox';
 
+// Constants for default values and magic numbers
+const DEFAULT_FONT_FAMILY = 'Arial';
+const DEFAULT_TYPE_SPEED = 30;
+const DEFAULT_BOX_ANIMATION_SPEED = 0;
+const DEFAULT_BOX_POSITION = 'bottom' as const;
+const TYPEWRITER_DELAY_MULTIPLIER = 1000; // Convert typeSpeed to milliseconds
+const CHOICE_BOX_OFFSET_X = 40;
+const CHOICE_BOX_OFFSET_Y = 12;
+
 // Type definitions for the plugin
 export interface DialogueConfig {
   fontFamily?: string;
@@ -13,6 +22,15 @@ export interface DialogueConfig {
   styles?: Record<string, TextStyle>;
   audio?: Record<string, string>;
   debug?: boolean;
+  
+  // Future configuration options:
+  // choiceBoxOffsetX?: number;
+  // choiceBoxOffsetY?: number;
+  // dialogueBoxWidth?: number;
+  // dialogueBoxHeight?: number;
+  // dialogueBoxPadding?: number;
+  // nameplateOffsetY?: number;
+  // typewriterDelayMultiplier?: number;
 }
 
 export interface TextStyle {
@@ -75,12 +93,12 @@ export default class VisualNovelDialogue {
   constructor(scene: Scene, config: DialogueConfig = {}) {
     this.scene = scene;
     this.config = {
-      fontFamily: 'Arial',
-      typeSpeed: 30,
+      fontFamily: DEFAULT_FONT_FAMILY,
+      typeSpeed: DEFAULT_TYPE_SPEED,
       boxStyle: 'default',
       autoForward: false,
-      boxAnimationSpeed: 0,
-      boxPosition: 'bottom',
+      boxAnimationSpeed: DEFAULT_BOX_ANIMATION_SPEED,
+      boxPosition: DEFAULT_BOX_POSITION,
       styles: {},
       audio: {},
       debug: false,
@@ -97,6 +115,7 @@ export default class VisualNovelDialogue {
 
   /**
    * Load dialogue data from JSON file or object
+   * @param dataOrPath - Dialogue data object or file path (file loading not yet implemented)
    */
   public load(dataOrPath: string | DialogueData): void {
     if (typeof dataOrPath === 'string') {
@@ -118,6 +137,7 @@ export default class VisualNovelDialogue {
 
   /**
    * Start dialogue at the specified label
+   * @param label - The label to start from (defaults to 'Start')
    */
   public start(label: string = 'Start'): void {
     if (!this.data) {
@@ -143,7 +163,8 @@ export default class VisualNovelDialogue {
   }
 
   /**
-   * Jump to a specific label
+   * Jump to a specific label in the dialogue script
+   * @param label - The label to jump to
    */
   public jumpTo(label: string): void {
     if (!this.data || !this.data.script[label]) {
@@ -162,7 +183,7 @@ export default class VisualNovelDialogue {
   }
 
   /**
-   * Pause the dialogue
+   * Pause the dialogue (prevents advancement)
    */
   public pause(): void {
     this.isPaused = true;
@@ -172,7 +193,7 @@ export default class VisualNovelDialogue {
   }
 
   /**
-   * Resume the dialogue
+   * Resume the dialogue (allows advancement to continue)
    */
   public resume(): void {
     this.isPaused = false;
@@ -296,7 +317,10 @@ export default class VisualNovelDialogue {
     });
     // Position the choice box below the dialogue box
     if (this.dialogueBox) {
-      this.choiceBox.setPosition(this.dialogueBox.x + 40, this.dialogueBox.y + this.dialogueBox.height + 12);
+      this.choiceBox.setPosition(
+        this.dialogueBox.x + CHOICE_BOX_OFFSET_X, 
+        this.dialogueBox.y + this.dialogueBox.height + CHOICE_BOX_OFFSET_Y
+      );
     }
   }
 
@@ -362,7 +386,7 @@ export default class VisualNovelDialogue {
     this.dialogueBox?.setText('');
     
     // Calculate delay between characters (in milliseconds)
-    const delay = 1000 / (this.config.typeSpeed || 30);
+    const delay = TYPEWRITER_DELAY_MULTIPLIER / (this.config.typeSpeed || DEFAULT_TYPE_SPEED);
     
     // Start typewriter timer
     this.typewriterTimer = this.scene.time.addEvent({
@@ -474,7 +498,7 @@ export default class VisualNovelDialogue {
   }
 
   /**
-   * Skip typewriter effect (show full text immediately)
+   * Skip the current typewriter effect (show full text immediately)
    */
   public skipTypewriter(): void {
     if (this.isTypewriting) {
@@ -491,6 +515,7 @@ export default class VisualNovelDialogue {
 
   /**
    * Check if typewriter is currently active
+   * @returns true if typewriter is running
    */
   public isTypewriterActive(): boolean {
     return this.isTypewriting;
@@ -498,6 +523,7 @@ export default class VisualNovelDialogue {
 
   /**
    * Check if choices are currently being displayed
+   * @returns true if choice UI is active
    */
   public isChoicesActive(): boolean {
     return this.isShowingChoices;
