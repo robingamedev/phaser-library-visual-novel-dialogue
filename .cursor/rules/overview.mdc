@@ -1,7 +1,5 @@
 ---
-description: A minimal, JSON-driven dialogue system for Phaser 3 games with support for branching choices, typewriter effects, and simple inline formatting.
-globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 ---
 id: visual-novel-dialogue-overview
