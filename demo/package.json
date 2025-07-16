@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@robingamedev/visual-novel-dialogue": "file:../",
+    "@robingamedev/visual-novel-dialogue": "^0.5.2",
     "phaser": "^3.70.0"
   },
   "devDependencies": {
