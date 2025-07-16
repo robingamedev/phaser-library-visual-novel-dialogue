@@ -1,15 +1,18 @@
 {
   "name": "@robingamedev/visual-novel-dialogue",
-  "version": "0.1.0",
+  "version": "0.5.2",
   "description": "A minimal, JSON-driven dialogue plugin for Phaser 3 games with support for branching choices, typewriter effects, and simple inline formatting.",
   "type": "module",
-  "main": "dist/VisualNovelDialogue.js",
-  "types": "dist/VisualNovelDialogue.d.ts",
+  "main": "./dist/VisualNovelDialogue.js",
+  "module": "./dist/VisualNovelDialogue.js",
+  "types": "./dist/VisualNovelDialogue.d.ts",
   "exports": {
     ".": {
       "import": "./dist/VisualNovelDialogue.js",
+      "require": "./dist/VisualNovelDialogue.js",
       "types": "./dist/VisualNovelDialogue.d.ts"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist/",
@@ -19,7 +22,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "clean": "if exist dist rmdir /s /q dist",
-    "prebuild": "npm run clean"
+    "prebuild": "npm run clean",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "phaser",
@@ -28,13 +32,16 @@
     "visual-novel",
     "game",
     "plugin",
-    "typescript"
+    "typescript",
+    "dialogue-system",
+    "text-adventure",
+    "story-game"
   ],
   "author": "Robin Game Dev",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/robingamedev/visual-novel-dialogue.git"
+    "url": "git+https://github.com/robingamedev/visual-novel-dialogue.git"
   },
   "bugs": {
     "url": "https://github.com/robingamedev/visual-novel-dialogue/issues"
@@ -46,4 +53,4 @@
   "peerDependencies": {
     "phaser": "^3.60.0"
   }
-} 
+}
