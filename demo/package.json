@@ -1,6 +1,6 @@
 {
   "name": "visual-novel-dialogue-demo",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Demo for Visual Novel Dialogue Plugin",
   "type": "module",
   "scripts": {
