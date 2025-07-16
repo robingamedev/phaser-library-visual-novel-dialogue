@@ -1,19 +1,10 @@
 {
   "name": "@robingamedev/visual-novel-dialogue",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A minimal, JSON-driven dialogue plugin for Phaser 3 games with support for branching choices, typewriter effects, and simple inline formatting.",
   "type": "module",
   "main": "./dist/VisualNovelDialogue.js",
-  "module": "./dist/VisualNovelDialogue.js",
   "types": "./dist/VisualNovelDialogue.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/VisualNovelDialogue.js",
-      "require": "./dist/VisualNovelDialogue.js",
-      "types": "./dist/VisualNovelDialogue.d.ts"
-    },
-    "./package.json": "./package.json"
-  },
   "files": [
     "dist/",
     "README.md"
