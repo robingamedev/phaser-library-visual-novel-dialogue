@@ -30,12 +30,12 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Copy built files to root
+      - name: Copy built files to demo directory
         run: |
-          cp -r dist/* ../
+          cp -r dist/* ./
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ../
+          publish_dir: demo
