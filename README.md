@@ -4,7 +4,7 @@ A minimal, JSON-driven dialogue plugin for Phaser 3 games with support for branc
 
 ## Try it for yourself
 
-[Demo](https://robingamedev.github.io/phaser-library-visual-novel-dialogue/demo/)
+[Demo](https://robingamedev.github.io/phaser-library-visual-novel-dialogue/)
 
 ## Features
 

@@ -1,22 +1,47 @@
----
-description: 
-globs: 
-alwaysApply: false
----
 # Status & Changelog
 
-## Current Version: 0.2.0 (Development)
+## Current Version: 1.0.0 (Production)
 
-**Status:** Phase 2 & 4 - Core Plugin Development & Demo Project (Complete)
+**Status:** Phase 5 Complete - NPM Packaging & Release (Complete)
 
-The plugin has completed its core development phase with a fully functional dialogue system, typewriter effects, inline formatting, choice system, and a comprehensive demo project.
+The plugin has been successfully published to npm and includes a working live demo. This is now a stable, production-ready release.
 
 ---
 
 ## Version History
 
-### v0.2.0 (Development) - Current
-**Phase 2: Core Plugin Development & Phase 4: Demo Project**
+### v1.0.0 (Production) - Current
+**Phase 5: NPM Packaging & Release**
+
+#### ✅ Completed
+- **NPM Package**
+  - Published to npm as `@robingamedev/visual-novel-dialogue`
+  - Version 0.5.2 with proper TypeScript declarations
+  - Configured exports for bundler compatibility
+  - Includes comprehensive README with usage examples
+
+- **Live Demo**
+  - Deployed to GitHub Pages at `https://robingamedev.github.io/phaser-library-visual-novel-dialogue/demo/`
+  - Working demo with character sprites, audio, and full dialogue system
+  - GitHub Actions workflow for automated deployment
+  - Proper build and deployment pipeline
+
+- **Documentation**
+  - Enhanced README with comprehensive usage examples
+  - API documentation with configuration options
+  - Event hook examples and JSON structure guides
+  - Installation and quick start instructions
+
+#### 🚧 Next Up
+- **Phase 6: Post-Release Maintenance**
+  - Monitor for bugs and developer feedback
+  - Keep documentation up to date
+  - Consider feature requests and improvements
+
+---
+
+### v0.5.2 (Development) - Previous
+**Phase 4: Demo Project**
 
 #### ✅ Completed
 - **Core Plugin Implementation**
@@ -46,15 +71,24 @@ The plugin has completed its core development phase with a fully functional dial
   - Configurable styling and audio systems
   - Clean API surface with proper TypeScript types
 
-#### 🚧 Next Up
-- **Phase 5: NPM Packaging & Release**
-  - Package.json creation and metadata
-  - Build system and TypeScript declarations
-  - NPM publishing and distribution
-
 ---
 
-## Previous Versions
+### v0.2.0 (Development) - Previous
+**Phase 2: Core Plugin Development**
+
+#### ✅ Completed
+- **Core Plugin Implementation**
+  - Complete dialogue system with JSON parsing
+  - Typewriter text effects with configurable speed
+  - Inline formatting support (`{style=value}` and `{audio=value}`)
+  - Vertical choice system with clickable buttons
+  - Character show/hide commands with emotion support
+  - Box positioning (`bottom`, `top`, `center`)
+  - Event system (`onLineEnd`, `onChoice`, `onEnd`, `onShow`, `onHide`)
+  - Debug mode with comprehensive logging
+  - Style persistence and audio playback during typewriter
+
+---
 
 ### v0.1.0 (Development) - Previous
 **Phase 1: Planning & Documentation**
@@ -81,17 +115,11 @@ The plugin has completed its core development phase with a fully functional dial
 
 ## Planned Features
 
-### v0.3.0 (Target)
-**Phase 5: NPM Packaging & Release**
-- NPM package creation and metadata
-- TypeScript declarations and build system
-- Public release and distribution
-
-### v0.4.0 (Target)
+### v1.1.0 (Future)
 **Phase 6: Post-Release Maintenance**
-- Live demo deployment
-- Documentation updates
 - Community feedback integration
+- Performance optimizations
+- Additional configuration options
 
 ---
 
@@ -104,12 +132,14 @@ The plugin has completed its core development phase with a fully functional dial
 - **Style System:** Simple `{style=value}` tags with no inheritance
 - **Audio:** Inline `{audio=value}` triggers
 - **Demo:** Full TypeScript demo with Vite, character sprites, and audio
+- **NPM Package:** `@robingamedev/visual-novel-dialogue@0.5.2`
+- **Live Demo:** `https://robingamedev.github.io/phaser-library-visual-novel-dialogue/demo/`
 
 ---
 
 ## Breaking Changes
 
-None yet - plugin is in development phase.
+None - plugin is now stable and production-ready.
 
 ---
 
@@ -121,7 +151,12 @@ None currently identified - all core functionality is working as expected.
 
 ## Contributing
 
-This plugin is currently in active development. The roadmap is defined in `todo.mdc` and progress is tracked in this file.
+This plugin is now in production. Please report issues on GitHub and check the documentation for usage examples.
+
+---
+
+*Last updated: Phase 5 completion - Production Release*
+
 
 ---
 
