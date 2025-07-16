@@ -2,7 +2,7 @@
 
 A minimal, JSON-driven dialogue plugin for Phaser 3 games with support for branching choices, typewriter effects, and simple inline formatting.
 
-## Demo
+## Try it for yourself
 
 [Demo](https://robingamedev.github.io/phaser-library-visual-novel-dialogue/demo/)
 
